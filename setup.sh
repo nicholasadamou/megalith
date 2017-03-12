@@ -42,16 +42,25 @@ configure_usb() {
 	echo "$(tput setaf 6)Please insert Mass Storage Device into USB Slot.$(tput sgr0)"
 	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] after inserting Mass Storage Device...$(tput sgr0)"
 	sleep 10
-	if [ -f /dev/sda1 ] ; then
-		#see: http://stackoverflow.com/questions/42750692/how-do-i-grab-a-specific-section-of-a-stdout
-		disk="/dev/"/$(tail /var/log/messages | grep -Po 'sd[a-z]+: \Ksd[a-z0-9]+$')
+
+	#see: http://stackoverflow.com/questions/42750692/how-do-i-grab-a-specific-section-of-a-stdout
+	disk="/dev/"$(tail /var/log/messages | grep -Po 'sd[a-z]+: \Ksd[a-z0-9]+$')
+
+	if [ "$disk" ] ; then
 		echo "$(tput setaf 6)Mass Storage Device [$(tput setaf 5)$disk$(tput setaf 6)] detected.$(tput sgr0)"
 
 		partion_type=$(sudo blkid "$disk" -s TYPE -o value)
 
 		#format usb drive as 'ext4' if not already 'ext4'
 		if [ "$partion_type" != "ext4" ] ; then
-			mkfs.ext4 "$disk"
+			read -r -p "$(tput setaf 6)Do you want to format $disk as ext4? [y/N] $(tput sgr0)" choice
+			if [ "$choice" == "y" ] || [ "$choice" == "Y" ] ; then
+				echo "$(tput setaf 6)Formatting Mass Storage Device [$(tput setaf 5)$disk$(tput setaf 6)] as ext4...$(tput sgr0)"
+				mkfs.ext4 "$disk"
+			elif [ "$choice" == "n" ] || [ "$choice" == "N" ] ; then
+				closing
+				exit 0
+			fi
 		fi
 
 		target=/mnt/data
@@ -92,6 +101,9 @@ configure_transmission() {
 	downloads="$drive"/downloads
 	incomplete="$drive"/incomplete
 
+	#stop the transmission for configuring
+	/etc/init.d/transmission-daemon stop
+
 	x=/etc/transmission-daemon/settings.json
 	cp "$x" "$x".bak
 	jq_replace "$x" rpc-username "$username"
@@ -114,7 +126,7 @@ configure_transmission() {
 	cp "$x" "$x".bak
 	replace_str "$x" User debian-transmission "$user"
 
-	#reload transmission
+	#reload transmission to apply configurations
 	service transmission-daemon reload
 
 	mkdir -p /home/"$USER"/.config/transmission-daemon/
@@ -140,6 +152,7 @@ configure_samba() {
 	name=app_name
 	comment="Always-On Downloading $name"
 
+	#TODO: fix the following to append to $x
 	cat < "$x" <<- EOL
 	["$name"]
 	comment = "$comment"
@@ -215,7 +228,7 @@ begin() {
 	install_pkgs
 	configure_usb
 	configure_transmission
-	configure_samba
+	#configure_samba
 	enable_on_boot
 	finish
 }
