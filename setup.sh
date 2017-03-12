@@ -6,7 +6,7 @@ app_name="Megalith"
 moniker="4d4m0u"
 link="http://github.com/NicholasAdamou/$app_name"
 
-user=root
+user=pi
 rpcPort=0
 drive=/mnt/data
 
@@ -43,13 +43,16 @@ configure_usb() {
 	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] after inserting Mass Storage Device...$(tput sgr0)"
 	sleep 10
 	if [ -f /dev/sda1 ] ; then
-		disk=$(blkid -o device | grep /dev/sda1)
+		#see: http://stackoverflow.com/questions/42750692/how-do-i-grab-a-specific-section-of-a-stdout
+		disk="/dev/"/$(tail /var/log/messages | grep -Po 'sd[a-z]+: \Ksd[a-z0-9]+$')
 		echo "$(tput setaf 6)Mass Storage Device [$(tput setaf 5)$disk$(tput setaf 6)] detected.$(tput sgr0)"
 
-		#format usb drive as 'ext4'
-		mkfs.ext4 "$disk"
+		partion_type=$(sudo blkid "$disk" -s TYPE -o value)
 
-		partion_type=$(blkid "$disk" -s TYPE -o value) #ext4
+		#format usb drive as 'ext4' if not already 'ext4'
+		if [ "$partion_type" != "ext4" ] ; then
+			mkfs.ext4 "$disk"
+		fi
 
 		target=/mnt/data
 
@@ -89,8 +92,6 @@ configure_transmission() {
 	downloads="$drive"/downloads
 	incomplete="$drive"/incomplete
 
-	/etc/init.d/transmission-daemon stop
-
 	x=/etc/transmission-daemon/settings.json
 	cp "$x" "$x".bak
 	jq_replace "$x" rpc-username "$username"
@@ -111,7 +112,7 @@ configure_transmission() {
 
 	x=/etc/systemd/system/multi-user.target.wants/transmission-daemon.service
 	cp "$x" "$x".bak
-	replace_str "$x" user debian-transmission "$user"
+	replace_str "$x" User debian-transmission "$user"
 
 	#reload transmission
 	service transmission-daemon reload
@@ -121,7 +122,7 @@ configure_transmission() {
 	chown -R "$user":users /home/"$USER"/.config/transmission-daemon/
 
 	#restart transmission
-	service transmission-daemon start
+	service transmission-daemon restart
 }
 
 #setting up Samba Server
@@ -134,9 +135,10 @@ configure_samba() {
 	echo "$(tput setaf 6)Configuring samba...$(tput sgr0)"
 
 	x=/etc/samba/smb.conf
+	cp "$x" "$x".bak
+
 	name=app_name
 	comment="Always-On Downloading $name"
-	user=pi
 
 	cat < "$x" <<- EOL
 	["$name"]
