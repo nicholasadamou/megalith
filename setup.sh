@@ -118,7 +118,7 @@ configure_transmission() {
 	service transmission-daemon reload
 
 	mkdir -p /home/"$USER"/.config/transmission-daemon/
-	ln -s /etc/transmission-daemon/settings.json /home/"$USER"/.config/transmission-daemon/
+	ln -s /etc/transmission-daemon/settings.json /home/"$USER"/.config/transmission-daemon/settings.json
 	chown -R "$user":users /home/"$USER"/.config/transmission-daemon/
 
 	#restart transmission
