@@ -183,8 +183,8 @@ configure_samba() {
 }
 
 enable_on_boot() {
-  echo "$(tput setaf 6)Setting transmission to start on system boot...$(tput sgr0)"
-  update-rc.d transmission-daemon enable
+	echo "$(tput setaf 6)Setting transmission to start on system boot...$(tput sgr0)"
+	update-rc.d transmission-daemon enable
 }
 
 finish() {
