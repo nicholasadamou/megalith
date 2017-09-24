@@ -4,7 +4,7 @@
 
 app_name="Megalith"
 moniker="4d4m0u"
-link="http://github.com/NicholasAdamou/$app_name"
+link="http://github.com/nicholasadamou/$app_name"
 
 user=pi
 rpcPort=0
@@ -19,12 +19,12 @@ root_check() {
 
 init() {
 	echo "$(tput setaf 6)This script will configure your Raspberry Pi as a torrentbox.$(tput sgr0)"
-  read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
+	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 }
 
 update_pkgs() {
-  echo "$(tput setaf 6)Updating packages...$(tput sgr0)"
-  apt-get update -q -y
+	echo "$(tput setaf 6)Updating packages...$(tput sgr0)"
+	apt-get update -q -y
 }
 
 install_pkgs() {
@@ -37,7 +37,6 @@ install_pkgs() {
 	done
 }
 
-#TODO: Make sure configure_usb() works properly on PI
 configure_usb() {
 	echo "$(tput setaf 6)Please insert Mass Storage Device into USB Slot.$(tput sgr0)"
 	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] after inserting Mass Storage Device...$(tput sgr0)"
@@ -63,7 +62,7 @@ configure_usb() {
 			fi
 		fi
 
-		target=/mnt/data
+		target="$drive"
 
 		if ! [ -d "$target" ] ; then
 			mkdir -p "$target"
@@ -152,7 +151,6 @@ configure_samba() {
 	name=app_name
 	comment="Always-On Downloading $name"
 
-	#TODO: fix the following to append to $x
 	cat < "$x" <<- EOL
 	["$name"]
 	comment = "$comment"
@@ -228,7 +226,7 @@ begin() {
 	install_pkgs
 	configure_usb
 	configure_transmission
-	#configure_samba
+	configure_samba
 	enable_on_boot
 	finish
 }
