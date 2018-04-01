@@ -24,7 +24,7 @@ init() {
 
 update_pkgs() {
 	echo "$(tput setaf 6)Updating packages...$(tput sgr0)"
-	apt-get update -q -y
+	apt update -q -y
 }
 
 install_pkgs() {
@@ -33,7 +33,7 @@ install_pkgs() {
 	for i in ${pkgs[*]}
 	do
 		echo "$(tput setaf 6)Installing [$(tput setaf 6)$i$(tput setaf 6)]...$(tput sgr0)"
-		apt-get install "$i"
+		apt install -y "$i"
 	done
 }
 
@@ -140,8 +140,8 @@ configure_transmission() {
 #see: http://www.makeuseof.com/tag/how-to-turn-your-raspberry-pi-into-an-always-on-downloading-megalith/
 configure_samba() {
 	echo "$(tput setaf 6)Installing samba...$(tput sgr0)"
-	apt-get remove wolfram-engine
-	apt-get install samba samba-common-bin
+	apt remove wolfram-engine
+	apt install -y samba samba-common-bin
 
 	echo "$(tput setaf 6)Configuring samba...$(tput sgr0)"
 
@@ -213,7 +213,7 @@ jq_replace() {
 	if [ "$(which jq)" ] ; then
 		jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
 	else
-		apt-get install jq
+		apt install -y jq
 
 		jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
 	fi
