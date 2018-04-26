@@ -15,6 +15,7 @@ main() {
     find \
         ../src \
         -type f \
+        ! -path '../src/*.json' \
         -exec shellcheck \
                 -e SC1090 \
                 -e SC1091 \
