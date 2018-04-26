@@ -81,9 +81,9 @@ setup_megalith() {
 
 		sudo mount "$disk" "$target"
 
-		for DIR in {downloads, incomplete}; do
-			! [ -d "$target/$DIR" ] && mkdir "$target/$DIR"
-		done
+		if ! [ -d "$target"/{downloads,incomplete} ] ; then
+			mkdir "$target"/{downloads,incomplete}
+		fi
 
 		sudo chown "$user":users "$target"/{downloads,incomplete}
 

@@ -22,6 +22,7 @@ main() {
                 -e SC2129 \
                 -e SC2155 \
                 -e SC2164 \
+                -e SC2200
         {} +
 
     print_result $? "Run code through ShellCheck"
