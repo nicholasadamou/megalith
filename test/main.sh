@@ -18,6 +18,8 @@ main() {
         -exec shellcheck \
                 -e SC1090 \
                 -e SC1091 \
+                -e SC2033 \
+                -e SC2129 \
                 -e SC2155 \
                 -e SC2164 \
         {} +

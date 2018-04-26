@@ -12,9 +12,6 @@ declare skipQuestions=false
 trap "exit 1" TERM
 export TOP_PID=$$
 
-declare APP_NAME="Raspberry AnyFi"
-declare MONIKER="4d4m0u"
-
 declare link="http://github.com/nicholasadamou/$APP_NAME"
 
 declare user=pi
@@ -84,9 +81,9 @@ setup_megalith() {
 
 		sudo mount "$disk" "$target"
 
-		if ! [ -d "$target"/{downloads,incomplete} ] ; then
-			mkdir "$target"/{downloads,incomplete}
-		fi
+		for DIR in {downloads, incomplete}; do
+			! [ -d "$target/$DIR" ] && mkdir "$target/$DIR"
+		done
 
 		sudo chown "$user":users "$target"/{downloads,incomplete}
 
@@ -178,10 +175,10 @@ EOL
 
 	sudo sed -i -e 's/#security = user;/security = user;/g' "$FILE"
 
-	#restart samba
-	sudo service samba restart
+	# restart samba
+	service samba restart
 
-	#configure samba user
+	# configure samba user
 	smbpasswd -a "$user"
 	sudo chown "$user":users "$drive"
 	sudo chmod g+w "$drive"
