@@ -22,7 +22,7 @@ setup_megalith() {
 	echo "$(tput setaf 6)This script will configure your Raspberry Pi as a torrentbox.$(tput sgr0)"
 
 	if [ "$TRAVIS" != "true" ]; then
-    	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
+    		read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 	fi
 
 	update
