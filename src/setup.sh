@@ -12,7 +12,8 @@ declare skipQuestions=false
 trap "exit 1" TERM
 export TOP_PID=$$
 
-declare APP_NAME="Raspberry Pi Megalith"
+declare APP_NAME="Megalith"
+declare link="https://github.com/nicholasadamou/$APP_NAME"
 
 declare user=pi
 declare rpcPort=0
