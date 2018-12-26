@@ -3,7 +3,7 @@
 # Based on Raspberry Pi seedbox with Transmission and TorGuard
 # see: https://www.convalesco.org/articles/2015/06/08/raspberry-pi-seedbox-with-transmission-and-torguard.html
 
-declare BASH_UTILS_URL="https://raw.githubusercontent.com/nicholasadamou/Dotfile-Utilities/master/utils.sh"
+declare BASH_UTILS_URL="https://raw.githubusercontent.com/nicholasadamou/utilities/linux/utils.sh"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
