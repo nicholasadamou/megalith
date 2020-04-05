@@ -15,7 +15,7 @@ declare rpcPort=0
 declare drive=/mnt/data
 
 setup_megalith() {
-	echo "$(tput setaf 6)This script will configure your Raspberry Pi as a torrentbox.$(tput sgr0)"
+    echo "$(tput setaf 6)This script will configure your Raspberry Pi as a torrentbox.$(tput sgr0)"
 
     read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 
@@ -146,7 +146,7 @@ setup_megalith() {
 	name="$APP_NAME"
 	comment="Always-On Downloading $name"
 
-	cat < "$FILE" <<- EOL
+	sudo bash -c "cat > $FILE" <<-EOL
 	["$name"]
 	comment = "$comment"
 	path = "$drive"
