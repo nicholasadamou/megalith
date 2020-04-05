@@ -7,11 +7,6 @@ declare BASH_UTILS_URL="https://raw.githubusercontent.com/nicholasadamou/utiliti
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-declare skipQuestions=false
-
-trap "exit 1" TERM
-export TOP_PID=$$
-
 declare APP_NAME="Megalith"
 declare link="https://github.com/nicholasadamou/$APP_NAME"
 
@@ -22,9 +17,7 @@ declare drive=/mnt/data
 setup_megalith() {
 	echo "$(tput setaf 6)This script will configure your Raspberry Pi as a torrentbox.$(tput sgr0)"
 
-	if [ "$TRAVIS" != "true" ]; then
-    		read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
-	fi
+    	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 
 	update
 	upgrade
@@ -42,14 +35,12 @@ setup_megalith() {
 	)
 
 	for PKG in "${PKGS[@]}"; do
-		install_package "$PKG" "$PKG"
+		install_package "$PKG"
 	done
 
 	echo "$(tput setaf 6)Please insert Mass Storage Device into USB Slot.$(tput sgr0)"
 
-	if [ "$TRAVIS" != "true" ]; then
-		read -r -p "$(tput bold ; tput setaf 2)Press [Enter] after inserting Mass Storage Device...$(tput sgr0)"
-	fi
+	read -r -p "$(tput bold ; tput setaf 2)Press [Enter] after inserting Mass Storage Device...$(tput sgr0)"
 
 	sleep 10
 
@@ -99,12 +90,10 @@ setup_megalith() {
 		echo "$disk" "$target" "$partion_type" defaults 0 2 >> "$FILE"
 	fi
 
-	if [ "$TRAVIS" != "true" ]; then
-		read -r -p "$(tput setaf 6)Specify \"RPC username\": $(tput sgr0)" -e username
-		read -r -p "$(tput setaf 6)Specify \"RPC Passphrase\": $(tput sgr0)" -e passwd
-		read -r -p "$(tput setaf 6)Specify \"RPC Port\": $(tput sgr0)" -e port
-		read -r -p "$(tput setaf 6)Specify \"RPC whitelist\": $(tput sgr0)" -e whitelist
-	fi
+	read -r -p "$(tput setaf 6)Specify \"RPC username\": $(tput sgr0)" -e username
+	read -r -p "$(tput setaf 6)Specify \"RPC Passphrase\": $(tput sgr0)" -e passwd
+	read -r -p "$(tput setaf 6)Specify \"RPC Port\": $(tput sgr0)" -e port
+	read -r -p "$(tput setaf 6)Specify \"RPC whitelist\": $(tput sgr0)" -e whitelist
 
 	rpcPort="$port"
 
@@ -212,11 +201,6 @@ main() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    skip_questions "$@" \
-        && skipQuestions=true
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     ask_for_sudo
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -225,9 +209,7 @@ main() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    if ! $skipQuestions; then
-        restart
-    fi
+    restart
 }
 
-main "$@"
+main
