@@ -147,23 +147,23 @@ setup_megalith() {
 	comment="Always-On Downloading $name"
 
 	sudo bash -c "cat > $FILE" <<-EOL
-	["$name"]
-	comment = "$comment"
-	path = "$drive"
-	valid users = @users
-	force group = users
-	create mask = 0775
-	force create mode = 0775
-	security mask = 0775
-	force security mode = 0775
-	directory mask = 2775
-	force directory mode = 2775
-	directory security mask = 2775
-	force directory security mode = 2775
-	browseable = yes
-	writeable = yes
-	guest ok = no
-	read only = no
+["$name"]
+comment = "$comment"
+path = "$drive"
+valid users = @users
+force group = users
+create mask = 0775
+force create mode = 0775
+security mask = 0775
+force security mode = 0775
+directory mask = 2775
+force directory mode = 2775
+directory security mask = 2775
+force directory security mode = 2775
+browseable = yes
+writeable = yes
+guest ok = no
+read only = no
 EOL
 
 	sudo sed -i -e 's/#security = user;/security = user;/g' "$FILE"
