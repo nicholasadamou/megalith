@@ -34,7 +34,7 @@ More Information
 License
 -------
 
-Megalith is © 2018 Nicholas Adamou.
+Megalith is © Nicholas Adamou.
 
 It is free software, and may be redistributed under the terms specified in the [LICENSE] file.
 
